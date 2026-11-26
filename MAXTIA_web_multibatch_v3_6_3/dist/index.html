@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer"><title>MAXTIA Kinetics · Multi-batch analysis</title>
+<link rel="stylesheet" href="./style.css?v=3.6.3"><script defer src="./vendor/3Dmol-min.js"></script><script defer src="./molecular-view.js?v=3.6.3"></script><script defer src="./explorer.js?v=3.6.3"></script><script defer src="./report.js?v=3.6.3"></script><script defer src="./study.js?v=3.6.3"></script>
+</head>
+<body>
+<header class="bar"><div class="bar-inner"><div class="brand"><i class="mark" aria-hidden="true"></i>MAXTIA <span>Kinetics</span></div><a href="./single.html?v=3.6.3">Single-batch analysis</a></div></header>
+<main>
+<div class="intro"><div><h1>Multi-batch analysis</h1><p>Compare variants across independent experiments using each batch’s wild-type control.</p></div><span class="version">VERSION 3.6.3</span></div>
+<form id="form"><div class="columns"><div class="inputs">
+<section class="panel"><h2>Study reference</h2>
+<label>Shared binding partner<input type="text" id="partner" required placeholder="Analyte or binding partner used in every batch"></label>
+<label>Wild-type sequence <small>Optional if established by the NGS files</small><textarea id="wt" rows="2" placeholder="One-letter sequence or a single FASTA record" spellcheck="false"></textarea></label>
+<details><summary>Shared AlphaFold structure</summary><div class="inputs">
+<label>Structure (.cif or .mmcif)<input id="cif" type="file" accept=".cif,.mmcif"></label>
+<label>Chain ID<input type="text" id="chain" placeholder="A"></label>
+<div class="pair"><label>Full data (.json)<input id="full" type="file" accept=".json"></label><label>Summary confidences (.json)<input id="summary" type="file" accept=".json"></label></div>
+</div></details></section>
+<div id="batches" class="inputs"></div><button type="button" class="secondary" id="add">Add batch</button>
+</div><aside class="panel monitor"><h2>Run study</h2><div role="status" id="state" aria-live="polite">Awaiting input</div>
+<p class="hint">Use one LSA export per batch. Select the NGS file and barcode block separately for each run.</p>
+<button type="submit">Analyze batches</button><button id="cancel" type="button" hidden>Cancel run</button><button id="demo" type="button" class="secondary">Run two-batch example</button>
+<p class="privacy">Your files stay in this browser. Save the results before closing the tab.</p></aside></div></form>
+<section class="panel" id="results" hidden><div class="resultHead"><h2 id="resultTitle">Study results</h2><a class="primary" id="download" download="MAXTIA-multibatch-results.zip">Download study ZIP</a></div>
+<div id="metrics" class="metrics"></div><section id="modelPanel" hidden></section><div class="view-controls"><label>Compare variants by<select id="view"><option value="overview">Study</option><option value="by_condition">Condition</option><option value="batch_rows">Batch</option></select></label><label>Find variant<input type="search" id="find" placeholder="Variant label"></label></div>
+<div class="scroll-table" tabindex="0" aria-label="Variant effects"><table id="effects"></table></div><p class="hint">A dash indicates an unavailable or withheld estimate. Open the batch view for the observations behind each summary.</p>
+
+<details><summary>Analysis report</summary><div id="report"></div></details></section>
+<details class="panel" id="guide"><summary>User guide</summary>
+<p>Use batches of the same protein and binding partner. Each LSA workbook must contain one analyte set. You can reuse a primer barcode block or select a different block for each batch. If several blocks share an NGS CSV, select that file for each relevant batch and specify its block.</p>
+<p>Use the same condition label for equivalent conditions. Enter a distinct label when the buffer, temperature, assay setup, or another relevant condition changes. Unlabeled batches each form their own condition. Differences in supplied experiment metadata also form separate groups.</p>
+<p>The study matches full, validated amino acid sequences across batches. KD, kon, and koff are normalized to their own batch WT. Every observed variant remains traceable, including variants seen just once and records with limited QC. The report explains the descriptive summaries and flags discordant observations.</p>
+<p>Structure colors use signed ΔΔG and a shared scale for all batches and conditions. Blue and red mark their respective extrema, with white at zero. The default map combines all batches. Switch maps to compare a condition or a batch. Open structure_study.html from the extracted ZIP to revisit the interactive map offline. The ZIP also includes structure_study.cxc for ChimeraX and residue_colors_study.csv.</p></details></main><footer>MAXTIA Kinetics <span>Browser workbench</span></footer>
+<template id="batchTemplate"><section class="panel batch"><div class="resultHead"><h2></h2><button type="button" class="secondary remove">Remove batch</button></div>
+<div class="pair"><label>Batch name<input type="text" data-key="id" required></label><label>Condition label<input type="text" data-key="condition" placeholder="e.g. 25 °C, buffer A"></label></div>
+<div class="files"><label class="file"><strong>Carterra LSA workbook</strong><input type="file" data-key="lsa" accept=".xlsx" required></label><label class="file"><strong>NGS library CSV</strong><input type="file" data-key="ngs" accept=".csv" required></label></div>
+<label>Primer barcode block<select data-key="block"><option value="">Use policy or original numbering</option><option>P01-P04</option><option>P05-P08</option><option>P09-P12</option></select></label>
+<details><summary>Batch QC policy</summary><label>Policy JSON <small>Optional</small><input type="file" data-key="policy" accept=".json"></label></details></section></template>
+</body></html>

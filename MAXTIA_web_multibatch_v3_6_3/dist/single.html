@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light"><meta name="referrer" content="no-referrer">
+  <title>MAXTIA Kinetics · Binding analysis</title>
+  <link rel="stylesheet" href="./style.css?v=3.6.3"><script defer src="./vendor/3Dmol-min.js"></script><script defer src="./molecular-view.js?v=3.6.3"></script><script defer src="./explorer.js?v=3.6.3"></script><script defer src="./report.js?v=3.6.3"></script><script src="./app.js?v=3.6.3" defer></script>
+</head>
+<body>
+<header class="bar"><div class="bar-inner"><div class="brand"><i class="mark" aria-hidden="true"></i>MAXTIA <span>Kinetics</span></div><a href="./?v=3.6.3">Multi-batch analysis</a></div></header>
+<main>
+  <div class="intro"><div><h1>Binding kinetics analysis</h1><p>Match LSA measurements to NGS variants and map their binding effects onto a protein structure.</p></div><span class="version">MODULE 3.6.3</span></div>
+  <form id="form">
+    <div class="columns"><div class="inputs">
+      <section class="panel"><h2>Experimental data</h2>
+        <div class="files">
+          <label class="file"><span class="type">XLSX</span><strong>Carterra LSA</strong><span class="hint">Workbook with a Kinetic Snapshot worksheet</span><input id="lsa" type="file" accept=".xlsx" required></label>
+          <label class="file"><span class="type">CSV</span><strong>NGS library</strong><span class="hint">Eight-column MAXTIA CSV without a header</span><input id="ngs" type="file" accept=".csv" required></label>
+        </div>
+      </section>
+      <section class="panel"><h2>Plate mapping</h2>
+        <label>Primer barcode block<select id="block"><option value="">Use policy or original plate numbers</option><option>P01-P04</option><option>P05-P08</option><option>P09-P12</option></select></label>
+        <div id="plateMap" class="plateMap"></div>
+        <p class="hint">If your CSV contains multiple blocks, select the primer barcode block used in this experiment.</p>
+      </section>
+      <details class="panel" id="structure"><summary>Structure mapping <small>Optional</small></summary>
+        <label>AlphaFold structure (.cif or .mmcif)<input type="file" id="cif" accept=".cif,.mmcif"></label>
+        <div class="pair"><label>Full data (.json)<input type="file" id="full" accept=".json"></label><label>Summary confidences (.json)<input type="file" id="summary" accept=".json"></label></div>
+        <label>Chain ID<input id="chain" type="text" placeholder="Chain from policy, or A" maxlength="24"></label>
+        <label>Wild-type (WT) sequence <small>Optional</small><textarea id="wt" rows="3" spellcheck="false" placeholder="Start at residue 1. Use one-letter amino acid codes or paste a single FASTA record."></textarea></label>
+        <p class="hint">Leave the sequence blank to use the WT sequence from the policy file or from NGS records labeled WT.</p>
+      </details>
+      <details class="panel"><summary>Analysis settings <small>Optional</small></summary>
+        <label>Experiment QC policy (.json)<input type="file" id="policy" accept=".json"></label>
+        <p class="hint">Use a v3.4.1 policy file such as <code>config.example.json</code>. The block, sequence, and chain you enter here override the policy. Check that the default QC thresholds suit your experiment’s fitting conditions.</p>
+      </details>
+    </div><aside class="panel monitor"><h2>Run status</h2>
+      <div id="state" role="status" aria-live="polite">Awaiting input</div>
+      <ol class="steps"><li id="step1">Select experiment files</li><li id="step2">Match wells and run QC</li><li id="step3">Save the report and results</li></ol>
+      <button id="start" type="submit">Run analysis</button><button id="cancel" type="button" hidden>Cancel run</button><button id="demo" type="button" class="secondary">Run example</button>
+      <p class="privacy">Your files are processed in this browser. Download your results before closing the tab.</p>
+    </aside></div>
+  </form>
+  <section id="results" class="panel" hidden>
+    <div class="resultHead"><h2 id="resultTitle">Analysis results</h2><a id="download" class="primary" download="MAXTIA-results.zip">Download results (ZIP)</a></div>
+    <div id="metrics" class="metrics"></div><p id="note" class="hint"></p>
+    <section id="modelPanel" hidden></section>
+    <details><summary>Analysis report</summary><div id="report"></div></details>
+  </section>
+  <details class="panel" id="guide"><summary>User guide</summary>
+    <p>Select the LSA and NGS files, choose the primer barcode block used in the experiment, and select <strong>Run analysis</strong>. For structure mapping, use the mmCIF file and chain ID of the protein that was mutated. Both optional AlphaFold 3 JSON files must come from the same model as the structure.</p>
+    <p>The results ZIP contains QC for each well, variant summaries, reports, and the settings used for the run. Adding a structure also produces residue mapping tables, an SVG overview, and structure_explorer.html for offline 3D inspection. To try the workflow with four synthetic wells, select <strong>Run example</strong>.</p>
+  <p>Structure colors use signed ΔΔG. The most negative mapped residue is blue, zero is white, and the most positive is red. Raw energies and the selected substitutions are in the residue color CSV.</p></details>
+</main><footer>MAXTIA Kinetics <span>Browser workbench</span></footer>
+</body></html>
